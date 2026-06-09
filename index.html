@@ -1,22 +1,1135 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Información vs Transformación</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información vs Transformación | Estudio Bíblico</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="presentation" class="scene">
-    <img id="background" class="background" src="assets/road_background.png" alt="Road background" />
-    <div id="content" class="content">
-      <!-- Slide content will be injected here -->
+    <!-- BACKGROUND CINEMATIC PATHWAY -->
+    <div class="sky-background"></div>
+    <div class="stars-container" id="stars"></div>
+    
+    <div class="camino-container">
+        <!-- Winding 3D SVG Road -->
+        <svg class="road-svg" viewBox="0 0 1000 800" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="road-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0a1738" stop-opacity="0.2" />
+                    <stop offset="50%" stop-color="#e5c158" stop-opacity="0.5" />
+                    <stop offset="100%" stop-color="#e5c158" stop-opacity="0.9" />
+                </linearGradient>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <!-- Winding perspective path lines -->
+            <path class="road-path-main" d="M500,200 Q460,350 540,500 T500,800" fill="none" stroke="url(#road-grad)" stroke-width="12" filter="url(#glow)" />
+            <path class="road-path-border-l" d="M485,200 Q445,350 515,500 T430,800" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="2" />
+            <path class="road-path-border-r" d="M515,200 Q475,350 565,500 T570,800" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="2" />
+        </svg>
     </div>
-    <button id="nextBtn" class="nav-btn">Siguiente</button>
-  </div>
-  <script src="script.js"></script>
+
+    <!-- PRESENTATION HEADER: HILO VISUAL -->
+    <header class="presentation-header glass-panel">
+        <div class="hilo-visual-container">
+            <div class="hilo-step active" id="hilo-info" data-step="info">
+                <span class="icon">🧠</span>
+                <span class="label">Información</span>
+            </div>
+            <div class="hilo-connector"></div>
+            <div class="hilo-step" id="hilo-convic" data-step="convic">
+                <span class="icon">❤️</span>
+                <span class="label">Transformación</span>
+            </div>
+            <div class="hilo-connector"></div>
+            <div class="hilo-step" id="hilo-fruto" data-step="fruto">
+                <span class="icon">🍇</span>
+                <span class="label">Fruto</span>
+            </div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </header>
+
+    <!-- FLOATING TREE CONTAINER (visible only in specific slides) -->
+    <div class="interactive-tree-wrapper" id="tree-wrapper">
+        <div class="tree-card glass-panel">
+            <h4 class="tree-card-title">Crecimiento Espiritual</h4>
+            <div class="tree-container" id="tree-container">
+                <!-- SVG Dynamic Tree -->
+                <svg viewBox="0 0 200 220" class="tree-svg">
+                    <defs>
+                        <radialGradient id="fruit-glow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ffdf7e" stop-opacity="1"/>
+                            <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+                    <!-- Soil / Ground line -->
+                    <path d="M20 200 Q 100 190 180 200" stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none"/>
+                    
+                    <!-- 🌱 SEED (Stage 1) -->
+                    <g class="tree-part part-seed">
+                        <circle cx="100" cy="195" r="5" fill="#e5c158" filter="url(#glow)"/>
+                        <path d="M100 195 Q 98 190 102 188" stroke="#34d399" stroke-width="2" fill="none"/>
+                    </g>
+                    
+                    <!-- 🌿 SPROUT (Stage 2) -->
+                    <g class="tree-part part-sprout">
+                        <path d="M100 195 Q 97 175 102 165" stroke="#34d399" stroke-width="3" fill="none"/>
+                        <!-- Left leaf -->
+                        <path d="M100 178 Q 88 172 90 166 Q 98 168 100 176" fill="#34d399"/>
+                        <!-- Right leaf -->
+                        <path d="M101 172 Q 112 166 110 160 Q 104 163 101 170" fill="#34d399"/>
+                    </g>
+                    
+                    <!-- 🌳 YOUNG TREE - Trunk & Base Branches (Stage 3) -->
+                    <g class="tree-part part-young">
+                        <!-- Trunk -->
+                        <path d="M97 195 Q 95 160 92 130 C 92 120 85 110 80 105" stroke="#a78bfa" stroke-width="5" fill="none" stroke-linecap="round"/>
+                        <path d="M103 195 Q 101 160 104 130 C 104 120 112 112 118 108" stroke="#a78bfa" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <!-- Middle Trunk Fill -->
+                        <path d="M100 195 L 98 130" stroke="#8b5cf6" stroke-width="3" fill="none"/>
+                        <!-- Primary branch left -->
+                        <path d="M94 150 Q 82 140 76 125" stroke="#a78bfa" stroke-width="3.5" fill="none"/>
+                        <!-- Primary branch right -->
+                        <path d="M102 145 Q 115 135 120 120" stroke="#a78bfa" stroke-width="3" fill="none"/>
+                        <!-- Young Foliage (light green semi-transparent circles) -->
+                        <circle cx="76" cy="120" r="14" fill="rgba(16, 185, 129, 0.6)"/>
+                        <circle cx="120" cy="115" r="12" fill="rgba(16, 185, 129, 0.6)"/>
+                        <circle cx="95" cy="100" r="18" fill="rgba(16, 185, 129, 0.7)"/>
+                    </g>
+                    
+                    <!-- 🌳 DEVELOPED TREE - Thick Foliage & Major Branches (Stage 4) -->
+                    <g class="tree-part part-developed">
+                        <!-- Sub branches -->
+                        <path d="M76 125 Q 65 120 60 108" stroke="#a78bfa" stroke-width="2.5" fill="none"/>
+                        <path d="M120 120 Q 130 115 135 105" stroke="#a78bfa" stroke-width="2" fill="none"/>
+                        <path d="M95 105 Q 90 85 85 75" stroke="#a78bfa" stroke-width="3" fill="none"/>
+                        <path d="M98 102 Q 108 88 112 78" stroke="#a78bfa" stroke-width="2.5" fill="none"/>
+                        <!-- Full Green Canopy layers -->
+                        <circle cx="58" cy="105" r="18" fill="#10b981"/>
+                        <circle cx="135" cy="100" r="16" fill="#10b981"/>
+                        <circle cx="82" cy="72" r="22" fill="#059669"/>
+                        <circle cx="112" cy="74" r="20" fill="#059669"/>
+                        <circle cx="98" cy="55" r="24" fill="#10b981"/>
+                        <circle cx="98" cy="85" r="20" fill="#047857"/>
+                    </g>
+                    
+                    <!-- 🌳🍇 FRUIT TREE (Stage 5) -->
+                    <g class="tree-part part-fruit">
+                        <!-- Glowing Fruits (Grape clusters) -->
+                        <!-- Cluster 1 (Left) -->
+                        <g transform="translate(58, 110)">
+                            <circle cx="0" cy="0" r="3.5" fill="#f59e0b" filter="url(#glow)"/>
+                            <circle cx="-3" cy="4" r="3" fill="#d4af37"/>
+                            <circle cx="3" cy="4" r="3" fill="#f59e0b"/>
+                            <circle cx="0" cy="8" r="2.5" fill="#d4af37"/>
+                        </g>
+                        <!-- Cluster 2 (Right) -->
+                        <g transform="translate(132, 102)">
+                            <circle cx="0" cy="0" r="3.5" fill="#f59e0b" filter="url(#glow)"/>
+                            <circle cx="-2" cy="4" r="3" fill="#d4af37"/>
+                            <circle cx="2" cy="4" r="3" fill="#f59e0b"/>
+                            <circle cx="0" cy="7" r="2.5" fill="#d4af37"/>
+                        </g>
+                        <!-- Cluster 3 (Center High) -->
+                        <g transform="translate(98, 62)">
+                            <circle cx="0" cy="0" r="4.5" fill="#f59e0b" filter="url(#glow)"/>
+                            <circle cx="-4" cy="5" r="3.5" fill="#d4af37"/>
+                            <circle cx="4" cy="5" r="3.5" fill="#f59e0b"/>
+                            <circle cx="0" cy="9" r="3" fill="#d4af37"/>
+                        </g>
+                        <!-- Cluster 4 (Center Left) -->
+                        <g transform="translate(78, 85)">
+                            <circle cx="0" cy="0" r="4" fill="#f59e0b" filter="url(#glow)"/>
+                            <circle cx="-3" cy="4" r="3.5" fill="#d4af37"/>
+                            <circle cx="3" cy="4" r="3.5" fill="#f59e0b"/>
+                            <circle cx="0" cy="7" r="2.5" fill="#d4af37"/>
+                        </g>
+                        <!-- Cluster 5 (Center Right) -->
+                        <g transform="translate(115, 82)">
+                            <circle cx="0" cy="0" r="4" fill="#f59e0b" filter="url(#glow)"/>
+                            <circle cx="-3" cy="4" r="3.5" fill="#d4af37"/>
+                            <circle cx="3" cy="4" r="3.5" fill="#f59e0b"/>
+                            <circle cx="0" cy="7" r="2.5" fill="#d4af37"/>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="tree-stage-description" id="tree-desc">Semilla plantada</div>
+        </div>
+    </div>
+
+    <!-- MAIN PRESENTATION SLIDES CONTAINER -->
+    <main class="slides-container" id="slider">
+
+        <!-- SLIDE 1: PORTADA -->
+        <section class="slide active" id="slide-1" data-hilo="info" data-tree="none">
+            <div class="slide-content text-center">
+                <h1 class="cinzel-title gold-glow">Información<br><span class="vs-text">vs</span><br>Transformación</h1>
+                <p class="subtitle playfair">¿Es suficiente conocer la verdad o debe producir un cambio en nuestra vida?</p>
+                <div class="verse-container text-center spacer-y font-small">
+                    <p class="bible-verse">
+                        <span class="verse-a">"No os conforméis a este siglo, sino transformaos</span>
+                        <span class="verse-b"> por medio de la renovación de vuestro entendimiento..."</span>
+                    </p>
+                    <span class="bible-ref gold-text">Romanos 12:2a</span>
+                </div>
+                <div class="scroll-helper pulse-anim">
+                    <span>Comenzar Viaje</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: PREGUNTA APERTURA -->
+        <section class="slide" id="slide-2" data-hilo="info" data-tree="none">
+            <div class="slide-content text-center">
+                <span class="category-tag gold-border">Pregunta de Apertura</span>
+                <h2 class="slide-title cinzel-title">¿Es posible saber mucho de Dios y aun así no parecerse a Él?</h2>
+                
+                <div class="interactive-reveal-container spacer-y">
+                    <button class="reveal-btn glass-btn" onclick="revealAnswer(this)">
+                        <i class="fa-solid fa-eye"></i> Reflexión
+                    </button>
+                    <div class="revealed-content glass-panel text-center">
+                        <p class="reveal-text">Sí. El conocimiento sin obediencia alimenta el orgullo espiritual, pero deja el corazón lejos de Dios.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: ¿QUÉ ES INFORMACIÓN? -->
+        <section class="slide" id="slide-3" data-hilo="info" data-tree="none">
+            <div class="slide-content split-layout">
+                <div class="layout-left">
+                    <span class="category-tag gold-border">Definición</span>
+                    <h2 class="slide-title cinzel-title">¿Qué es Información?</h2>
+                    <p class="definition-main font-lead">Datos, conceptos y conocimientos adquiridos de forma intelectual.</p>
+                    
+                    <ul class="bullet-list spacer-y">
+                        <li><i class="fa-solid fa-book-open list-icon"></i> <strong>Leer la Biblia</strong></li>
+                        <li><i class="fa-solid fa-ear-listening list-icon"></i> <strong>Escuchar predicaciones</strong></li>
+                        <li><i class="fa-solid fa-brain list-icon"></i> <strong>Memorizar versículos</strong></li>
+                        <li><i class="fa-solid fa-scroll list-icon"></i> <strong>Conocer doctrinas</strong></li>
+                    </ul>
+                    
+                    <div class="highlight-box glass-panel error-border text-center">
+                        <span class="badge red-bg">🧠 Conclusión Mental</span>
+                        <p class="highlight-text font-large">La información llega a la <strong>mente</strong>.</p>
+                    </div>
+                </div>
+                <div class="layout-right visual-graphic-panel">
+                    <div class="brain-concept-wrapper">
+                        <div class="brain-icon-glow">🧠</div>
+                        <div class="pulsing-particles-box">
+                            <span class="particle">Lectura</span>
+                            <span class="particle">Estudio</span>
+                            <span class="particle">Doctrina</span>
+                            <span class="particle">Datos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: ¿QUÉ ES TRANSFORMACIÓN? -->
+        <section class="slide" id="slide-4" data-hilo="convic" data-tree="seed">
+            <div class="slide-content split-layout">
+                <div class="layout-left">
+                    <span class="category-tag green-border">Definición</span>
+                    <h2 class="slide-title cinzel-title">¿Qué es Transformación?</h2>
+                    <p class="definition-main font-lead">El cambio profundo y permanente que el Espíritu Santo produce en el creyente.</p>
+                    
+                    <ul class="bullet-list spacer-y">
+                        <li><i class="fa-solid fa-mask-rose list-icon"></i> <strong>Carácter (Fruto del Espíritu)</strong></li>
+                        <li><i class="fa-solid fa-users-gear list-icon"></i> <strong>Conducta</strong></li>
+                        <li><i class="fa-solid fa-list-check list-icon"></i> <strong>Prioridades</strong></li>
+                        <li><i class="fa-solid fa-heart-circle-check list-icon"></i> <strong>Obediencia por amor</strong></li>
+                    </ul>
+                    
+                    <div class="highlight-box glass-panel success-border text-center">
+                        <span class="badge green-bg">🌱 Conclusión Vital</span>
+                        <p class="highlight-text font-large">La transformación se refleja en la <strong>vida</strong>.</p>
+                    </div>
+                </div>
+                <div class="layout-right visual-graphic-panel justify-center">
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: PREGUNTA 1 -->
+        <section class="slide" id="slide-5" data-hilo="convic" data-tree="seed">
+            <div class="slide-content text-center">
+                <span class="category-tag gold-border">Pregunta de Reflexión 1</span>
+                <h2 class="slide-title cinzel-title">¿Puede una persona tener información sin transformación?</h2>
+                
+                <div class="interactive-reveal-container spacer-y">
+                    <button class="reveal-btn glass-btn" onclick="revealAnswer(this)">
+                        <i class="fa-solid fa-eye"></i> Respuesta
+                    </button>
+                    <div class="revealed-content glass-panel text-center max-w-600 margin-center">
+                        <p class="reveal-text">Sí. El conocimiento sin obediencia no salva. Santiago 2:19: los demonios "creen y tiemblan", pero no son transformados.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: RESPUESTA 1 -->
+        <section class="slide" id="slide-6" data-hilo="convic" data-tree="seed">
+            <div class="slide-content text-center">
+                <span class="category-tag red-border">Respaldado por la Palabra</span>
+                <h2 class="slide-title cinzel-title text-danger">Sí, es posible (El autoengaño)</h2>
+                
+                <!-- CONGREGATIONAL VERSE -->
+                <div class="verse-card-wrapper spacer-y">
+                    <div class="verse-card glass-panel error-border">
+                        <p class="bible-verse font-large">
+                            <span class="verse-a">"Pero sed hacedores de la palabra, y no tan solamente oidores,</span>
+                            <span class="verse-b"> engañándoos a vosotros mismos."</span>
+                        </p>
+                        <span class="bible-ref text-danger">Santiago 1:22</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: PREGUNTA 2 -->
+        <section class="slide" id="slide-7" data-hilo="convic" data-tree="sprout">
+            <div class="slide-content text-center">
+                <span class="category-tag gold-border">Pregunta de Reflexión 2</span>
+                <h2 class="slide-title cinzel-title">¿Puede una persona tener transformación sin información?</h2>
+                
+                <div class="interactive-reveal-container spacer-y">
+                    <button class="reveal-btn glass-btn" onclick="revealAnswer(this)">
+                        <i class="fa-solid fa-eye"></i> Respuesta
+                    </button>
+                    <div class="revealed-content glass-panel text-center max-w-600 margin-center">
+                        <p class="reveal-text">No. La verdad de Dios es el cimiento necesario. El Espíritu Santo utiliza la Palabra para renovar nuestro entendimiento (Romanos 12:2).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8: RESPUESTA 2 -->
+        <section class="slide" id="slide-8" data-hilo="convic" data-tree="young">
+            <div class="slide-content text-center">
+                <span class="category-tag green-border">Respaldado por la Palabra</span>
+                <h2 class="slide-title cinzel-title text-success">No, la verdad es el cimiento</h2>
+                
+                <!-- CONGREGATIONAL VERSES (Two verses) -->
+                <div class="grid-2-cols spacer-y">
+                    <div class="verse-card glass-panel success-border">
+                        <p class="bible-verse">
+                            <span class="verse-a">"y conoceréis la verdad,</span>
+                            <span class="verse-b"> y la verdad os hará libres."</span>
+                        </p>
+                        <span class="bible-ref text-success">Juan 8:32</span>
+                    </div>
+
+                    <div class="verse-card glass-panel success-border">
+                        <p class="bible-verse">
+                            <span class="verse-a">"No os conforméis a este siglo, sino transformaos por medio de la renovación de vuestro entendimiento..."</span>
+                        </p>
+                        <span class="bible-ref text-success">Romanos 12:2</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: PREGUNTA 3 -->
+        <section class="slide" id="slide-9" data-hilo="convic" data-tree="developed">
+            <div class="slide-content text-center">
+                <span class="category-tag gold-border">Pregunta de Reflexión 3</span>
+                <h2 class="slide-title cinzel-title">¿Cómo sabemos que la información se convirtió en transformación?</h2>
+                
+                <div class="interactive-reveal-container spacer-y">
+                    <button class="reveal-btn glass-btn" onclick="revealAnswer(this)">
+                        <i class="fa-solid fa-eye"></i> Respuesta
+                    </button>
+                    <div class="revealed-content glass-panel text-center max-w-600 margin-center">
+                        <p class="reveal-text">Por sus frutos (Mateo 7:20). El carácter y la obediencia práctica revelan la realidad del corazón.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: RESPUESTA 3 (FRUTO) -->
+        <section class="slide" id="slide-10" data-hilo="fruto" data-tree="fruit">
+            <div class="slide-content split-layout">
+                <div class="layout-left">
+                    <span class="category-tag gold-border">El Sello de la Fe</span>
+                    <h2 class="slide-title cinzel-title">La Evidencia: El Fruto</h2>
+                    
+                    <div class="verse-card glass-panel success-border spacer-y">
+                        <p class="bible-verse font-large">
+                            <span class="verse-a">"Así que, por sus frutos</span>
+                            <span class="verse-b"> los conoceréis."</span>
+                        </p>
+                        <span class="bible-ref gold-text">Mateo 7:20</span>
+                    </div>
+                </div>
+
+                <div class="layout-right">
+                    <h3 class="subsection-title playfair">La transformación se evidencia en:</h3>
+                    <div class="grid-2-cols list-grid">
+                        <div class="fruit-item glass-panel">
+                            <i class="fa-solid fa-circle-check item-icon text-success"></i>
+                            <div class="item-text">
+                                <strong>Obediencia</strong>
+                            </div>
+                        </div>
+                        <div class="fruit-item glass-panel">
+                            <i class="fa-solid fa-face-smile-beam item-icon text-success"></i>
+                            <div class="item-text">
+                                <strong>Humildad</strong>
+                            </div>
+                        </div>
+                        <div class="fruit-item glass-panel">
+                            <i class="fa-solid fa-handshake-angle item-icon text-success"></i>
+                            <div class="item-text">
+                                <strong>Perdón</strong>
+                            </div>
+                        </div>
+                        <div class="fruit-item glass-panel">
+                            <i class="fa-solid fa-dove item-icon text-success"></i>
+                            <div class="item-text">
+                                <strong>Santidad</strong>
+                            </div>
+                        </div>
+                        <div class="fruit-item glass-panel">
+                            <i class="fa-solid fa-hand-holding-heart item-icon text-success"></i>
+                            <div class="item-text">
+                                <strong>Servicio</strong>
+                            </div>
+                        </div>
+                        <div class="fruit-item glass-panel">
+                            <i class="fa-solid fa-shield-halved item-icon text-success"></i>
+                            <div class="item-text">
+                                <strong>Perseverancia</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 11: EJEMPLOS INTRO -->
+        <section class="slide" id="slide-11" data-hilo="fruto" data-tree="none">
+            <div class="slide-content text-center">
+                <span class="category-tag gold-border">Estudio Comparativo</span>
+                <h2 class="slide-title cinzel-title gold-glow">Ejemplos Bíblicos</h2>
+                <p class="subtitle playfair font-lead max-w-700 margin-center">Casos reales de información sin transformación frente a vidas genuinamente transformadas.</p>
+                
+                <div class="expectation-box spacer-y">
+                    <div class="spacer-y">
+                        <i class="fa-solid fa-circle-chevron-down scroll-indicator-down"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 12: TABLA PASO 1 (JUDAS VS ?) -->
+        <section class="slide" id="slide-12" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla de Análisis - Paso 1</span>
+                <h2 class="slide-title cinzel-title text-center">Comparación de Ejemplos Bíblicos</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>🔴 Información sin transformación</th>
+                                <th>🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="active-row">
+                                <td class="red-highlight font-bold font-large pulse-glow-red">Judas Iscariote</td>
+                                <td class="unknown-cell font-bold font-large">?</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13: DETALLE JUDAS -->
+        <section class="slide" id="slide-13" data-hilo="fruto" data-tree="none">
+            <div class="slide-content character-detail-slide red-theme">
+                <div class="character-header">
+                    <div class="character-avatar red-glow">🔴</div>
+                    <div class="character-title-block">
+                        <span class="category-tag-mini red-bg">Información sin Transformación</span>
+                        <h2 class="cinzel-title">Judas Iscariote</h2>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols spacer-y">
+                    <div class="detail-card glass-panel border-red">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-book-open-reader"></i> Su Privilegio (Información)</h3>
+                        <ul class="bullet-list-minimal">
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Caminó tres años con Jesús.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Escuchó enseñanzas de primera mano.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Presenció milagros y resurrecciones.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Predicó y sanó enfermos.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card glass-panel border-red">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-heart-crack"></i> Su Final</h3>
+                        <p class="character-explanation">Su corazón permaneció atado a la codicia. Conoció la verdad pero no se sometió a ella, terminando por traicionar a Jesús por 30 monedas.</p>
+                        <span class="bible-reference-badge"><i class="fa-solid fa-book"></i> Mateo 26:14-16</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 14: TABLA PASO 2 (JUDAS OK, ZAQUEO REVELADO) -->
+        <section class="slide" id="slide-14" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla de Análisis - Paso 2</span>
+                <h2 class="slide-title cinzel-title text-center">Comparación de Ejemplos Bíblicos</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>🔴 Información sin transformación</th>
+                                <th>🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="active-row">
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Judas Iscariote</td>
+                                <td class="green-highlight font-bold font-large pulse-glow-green">Zaqueo</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 15: DETALLE ZAQUEO -->
+        <section class="slide" id="slide-15" data-hilo="fruto" data-tree="none">
+            <div class="slide-content character-detail-slide green-theme">
+                <div class="character-header">
+                    <div class="character-avatar green-glow">🟢</div>
+                    <div class="character-title-block">
+                        <span class="category-tag-mini green-bg">Transformación Genuina</span>
+                        <h2 class="cinzel-title">Zaqueo</h2>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols spacer-y">
+                    <div class="detail-card glass-panel border-green">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-door-open"></i> El Encuentro</h3>
+                        <p class="character-explanation">Un encuentro con Jesús bastó para cambiar su vida y prioridades por completo.</p>
+                        <span class="bible-reference-badge"><i class="fa-solid fa-book"></i> Lucas 19:1-10</span>
+                    </div>
+
+                    <div class="detail-card glass-panel border-green">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-seedling"></i> Frutos Visibles</h3>
+                        <ul class="bullet-list-minimal">
+                            <li><i class="fa-solid fa-circle-check text-success"></i> <strong>Arrepentimiento:</strong> Devolvió cuatro veces lo defraudado.</li>
+                            <li><i class="fa-solid fa-circle-check text-success"></i> <strong>Generosidad:</strong> Dio la mitad de sus bienes a los pobres.</li>
+                            <li><i class="fa-solid fa-circle-check text-success"></i> <strong>Salvación:</strong> Confirmada directamente por Jesús.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 16: TABLA PASO 3 (ZAQUEO OK, FARISEOS REVELADO) -->
+        <section class="slide" id="slide-16" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla de Análisis - Paso 3</span>
+                <h2 class="slide-title cinzel-title text-center">Comparación de Ejemplos Bíblicos</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>🔴 Información sin transformación</th>
+                                <th>🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Judas Iscariote</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Zaqueo</td>
+                            </tr>
+                            <tr class="active-row">
+                                <td class="red-highlight font-bold font-large pulse-glow-red">Fariseos</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                            <tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 17: DETALLE FARISEOS -->
+        <section class="slide" id="slide-17" data-hilo="fruto" data-tree="none">
+            <div class="slide-content character-detail-slide red-theme">
+                <div class="character-header">
+                    <div class="character-avatar red-glow">🔴</div>
+                    <div class="character-title-block">
+                        <h2 class="cinzel-title">Los Fariseos</h2>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols spacer-y">
+                    <div class="detail-card glass-panel border-red">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-graduation-cap"></i> El Celo (Información)</h3>
+                        <ul class="bullet-list-minimal">
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Expertos en la Torá y tradiciones.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Rigurosos en rituales y diezmos.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Líderes religiosos respetados.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card glass-panel border-red">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-mask"></i> La Apariencia</h3>
+                        <p class="character-explanation">Jesús los llamó "sepulcros blanqueados": limpios por fuera, pero llenos de orgullo, legalismo y juicio por dentro.</p>
+                        <span class="bible-reference-badge"><i class="fa-solid fa-book"></i> Mateo 23:23-28</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 18: TABLA PASO 4 (FARISEOS OK, PEDRO REVELADO) -->
+        <section class="slide" id="slide-18" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla de Análisis - Paso 4</span>
+                <h2 class="slide-title cinzel-title text-center">Comparación de Ejemplos Bíblicos</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>🔴 Información sin transformación</th>
+                                <th>🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Judas Iscariote</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Zaqueo</td>
+                            </tr>
+                            <tr class="active-row">
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Fariseos</td>
+                                <td class="green-highlight font-bold font-large pulse-glow-green">Pedro (Post-Pentecostés)</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 19: DETALLE PEDRO -->
+        <section class="slide" id="slide-19" data-hilo="fruto" data-tree="none">
+            <div class="slide-content character-detail-slide green-theme">
+                <div class="character-header">
+                    <div class="character-avatar green-glow">🟢</div>
+                    <div class="character-title-block">
+                        <span class="category-tag-mini green-bg">Transformación Genuina</span>
+                        <h2 class="cinzel-title">Pedro (Post-Pentecostés)</h2>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols spacer-y">
+                    <div class="detail-card glass-panel border-green">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-user-xmark"></i> El Pasado</h3>
+                        <p class="character-explanation">Impulsivo y confiado en sus fuerzas, Pedro negó a Jesús tres veces por temor.</p>
+                        <span class="bible-reference-badge"><i class="fa-solid fa-book"></i> Lucas 22:54-62</span>
+                    </div>
+
+                    <div class="detail-card glass-panel border-green">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-fire-flame-curved"></i> El Pedro Transformado</h3>
+                        <ul class="bullet-list-minimal">
+                            <li><i class="fa-solid fa-circle-check text-success"></i> Lleno del Espíritu en Pentecostés.</li>
+                            <li><i class="fa-solid fa-circle-check text-success"></i> Valor inquebrantable ante el concilio.</li>
+                            <li><i class="fa-solid fa-circle-check text-success"></i> Su primer discurso convirtió a 3,000 personas.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 20: TABLA PASO 5 (PEDRO OK, ESCRIBAS REVELADO) -->
+        <section class="slide" id="slide-20" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla de Análisis - Paso 5</span>
+                <h2 class="slide-title cinzel-title text-center">Comparación de Ejemplos Bíblicos</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>🔴 Información sin transformación</th>
+                                <th>🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Judas Iscariote</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Zaqueo</td>
+                            </tr>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Fariseos</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Pedro</td>
+                            </tr>
+                            <tr class="active-row">
+                                <td class="red-highlight font-bold font-large pulse-glow-red">Escribas</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 21: DETALLE ESCRIBAS -->
+        <section class="slide" id="slide-21" data-hilo="fruto" data-tree="none">
+            <div class="slide-content character-detail-slide red-theme">
+                <div class="character-header">
+                    <div class="character-avatar red-glow">🔴</div>
+                    <div class="character-title-block">
+                        <span class="category-tag-mini red-bg">Información sin Transformación</span>
+                        <h2 class="cinzel-title">Los Escribas</h2>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols spacer-y">
+                    <div class="detail-card glass-panel border-red">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-pen-nib"></i> Los Guardianes (Información)</h3>
+                        <ul class="bullet-list-minimal">
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Copistas minuciosos de las Escrituras.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Conocían al detalle las profecías mesiánicas.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> Máximas autoridades literarias de la Ley.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-card glass-panel border-red">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-heart-crack"></i> Intelectualismo</h3>
+                        <p class="character-explanation">Dominaban la letra pero ignoraban el Espíritu de la Ley. Buscaban el reconocimiento público y el estatus religioso bajo una apariencia estéril.</p>
+                        <span class="bible-reference-badge"><i class="fa-solid fa-book"></i> Marcos 12:38-40</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 22: TABLA PASO 6 (ESCRIBAS OK, PABLO REVELADO) -->
+        <section class="slide" id="slide-22" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla de Análisis - Paso 6</span>
+                <h2 class="slide-title cinzel-title text-center">Comparación de Ejemplos Bíblicos</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>🔴 Información sin transformación</th>
+                                <th>🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Judas Iscariote</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Zaqueo</td>
+                            </tr>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Fariseos</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Pedro</td>
+                            </tr>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Escribas</td>
+                                <td class="green-highlight font-bold font-large pulse-glow-green">Pablo (Antes Saulo)</td>
+                            </tr>
+                            <tr>
+                                <td class="unknown-cell">?</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 23: CASO ESPECIAL: SAULO ➜ PABLO -->
+        <section class="slide" id="slide-23" data-hilo="fruto" data-tree="none">
+            <div class="slide-content dramatic-slide">
+                <div class="dramatic-header text-center">
+                    <span class="category-tag-special gold-border">Momento de Impacto</span>
+                    <h2 class="cinzel-title gold-glow title-large">SAULO <span class="arrow-transition">➜</span> PABLO</h2>
+                    <p class="dramatic-subtitle playfair">Un antes y un después en el camino a Damasco</p>
+                </div>
+
+                <div class="split-dramatic-panel spacer-y">
+                    <!-- BEFORE PANEL (RED) -->
+                    <div class="before-panel glass-panel border-red">
+                        <div class="panel-icon-header text-danger">
+                            <i class="fa-solid fa-fire"></i>
+                            <h3>SAULO: El Perseguidor</h3>
+                        </div>
+                        <ul class="bullet-list-minimal text-left">
+                            <li><i class="fa-solid fa-crosshairs text-danger"></i> Perseguidor violento de la iglesia.</li>
+                            <li><i class="fa-solid fa-ban text-danger"></i> Asolaba y encarcelaba a los fieles.</li>
+                            <li><i class="fa-solid fa-skull-crossbones text-danger"></i> Aprobó la muerte de Esteban.</li>
+                        </ul>
+                    </div>
+
+                    <!-- TRANSITION BULLET -->
+                    <div class="dramatic-divider">
+                        <div class="divider-circle gold-glow"><i class="fa-solid fa-bolt-lightning"></i></div>
+                    </div>
+
+                    <!-- AFTER PANEL (GREEN) -->
+                    <div class="after-panel glass-panel border-green">
+                        <div class="panel-icon-header text-success">
+                            <i class="fa-solid fa-dove"></i>
+                            <h3>PABLO: El Apóstol</h3>
+                        </div>
+                        <ul class="bullet-list-minimal text-left">
+                            <li><i class="fa-solid fa-circle-check text-success"></i> Apóstol incansable y misionero.</li>
+                            <li><i class="fa-solid fa-globe text-success"></i> Llevó el evangelio a las naciones gentiles.</li>
+                            <li><i class="fa-solid fa-pen-fancy text-success"></i> Autor inspirado de la mayor parte de las Epístolas.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="reflection-card-gold glass-panel text-center max-w-700 margin-center">
+                    <p class="reflection-question">"Cristo Jesús vino al mundo para salvar a los pecadores, de los cuales yo soy el primero." - <strong>1 Timoteo 1:15</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 24: TABLA PASO 7 (PABLO OK, REY SAUL REVELADO) -->
+        <section class="slide" id="slide-24" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla de Análisis - Paso 7</span>
+                <h2 class="slide-title cinzel-title text-center">Comparación de Ejemplos Bíblicos</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>🔴 Información sin transformación</th>
+                                <th>🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Judas Iscariote</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Zaqueo</td>
+                            </tr>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Fariseos</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Pedro</td>
+                            </tr>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Escribas</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Pablo</td>
+                            </tr>
+                            <tr class="active-row">
+                                <td class="red-highlight font-bold font-large pulse-glow-red">Rey Saúl</td>
+                                <td class="unknown-cell">?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 25: DETALLE REY SAUL -->
+        <section class="slide" id="slide-25" data-hilo="fruto" data-tree="none">
+            <div class="slide-content character-detail-slide red-theme">
+                <div class="character-header">
+                    <div class="character-avatar red-glow">🔴</div>
+                    <div class="character-title-block">
+                        <span class="category-tag-mini red-bg">Información sin Transformación</span>
+                        <h2 class="cinzel-title">Rey Saúl</h2>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols spacer-y">
+                    <div class="detail-card glass-panel border-red">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-volume-high"></i> La Instrucción (Información)</h3>
+                        <p class="character-explanation">Conocía perfectamente los mandatos divinos a través del profeta Samuel, pero eligió acomodarlos a su conveniencia.</p>
+                        <span class="bible-reference-badge"><i class="fa-solid fa-book"></i> 1 Samuel 15</span>
+                    </div>
+
+                    <div class="detail-card glass-panel border-red">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-square-xmark"></i> Rebelión</h3>
+                        <ul class="bullet-list-minimal">
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> <strong>Obediencia parcial:</strong> Preservó al rey enemigo y lo mejor del ganado.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> <strong>Auto-justificación:</strong> Culpó al pueblo y argumentó fines religiosos.</li>
+                            <li><i class="fa-solid fa-caret-right text-danger"></i> <strong>Rechazo:</strong> Samuel sentenció: "El obedecer es mejor que los sacrificios".</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 26: TABLA PASO 8 (REY SAUL OK, MUJER SAMARITANA REVELADA) -->
+        <section class="slide" id="slide-26" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla de Análisis - Paso 8</span>
+                <h2 class="slide-title cinzel-title text-center">Comparación de Ejemplos Bíblicos</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>🔴 Información sin transformación</th>
+                                <th>🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Judas Iscariote</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Zaqueo</td>
+                            </tr>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Fariseos</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Pedro</td>
+                            </tr>
+                            <tr>
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Escribas</td>
+                                <td class="completed-cell green-text strike-through"><i class="fa-solid fa-circle-check"></i> Pablo</td>
+                            </tr>
+                            <tr class="active-row">
+                                <td class="completed-cell red-text strike-through"><i class="fa-solid fa-circle-check"></i> Rey Saúl</td>
+                                <td class="green-highlight font-bold font-large pulse-glow-green">La Mujer Samaritana</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 27: DETALLE MUJER SAMARITANA -->
+        <section class="slide" id="slide-27" data-hilo="fruto" data-tree="none">
+            <div class="slide-content character-detail-slide green-theme">
+                <div class="character-header">
+                    <div class="character-avatar green-glow">🟢</div>
+                    <div class="character-title-block">
+                        <span class="category-tag-mini green-bg">Transformación Genuina</span>
+                        <h2 class="cinzel-title">La Mujer Samaritana</h2>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols spacer-y">
+                    <div class="detail-card glass-panel border-green">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-droplet"></i> El Encuentro</h3>
+                        <p class="character-explanation">Una mujer con un pasado difícil que se encuentra con Jesús junto al pozo de Sicar.</p>
+                        <span class="bible-reference-badge"><i class="fa-solid fa-book"></i> Juan 4:1-30</span>
+                    </div>
+
+                    <div class="detail-card glass-panel border-green">
+                        <h3 class="card-subtitle"><i class="fa-solid fa-share-nodes"></i> Fruto del Testimonio</h3>
+                        <ul class="bullet-list-minimal">
+                            <li><i class="fa-solid fa-circle-check text-success"></i> Dejó su cántaro y prioridades pasadas.</li>
+                            <li><i class="fa-solid fa-circle-check text-success"></i> Predicó a su ciudad compartiendo su testimonio.</li>
+                            <li><i class="fa-solid fa-circle-check text-success"></i> Muchos samaritanos creyeron en Jesús.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 28: TABLA FINAL (CIERRE DE COMPARACIÓN) -->
+        <section class="slide" id="slide-28" data-hilo="fruto" data-tree="none">
+            <div class="slide-content">
+                <span class="category-tag gold-border">Tabla Completada</span>
+                <h2 class="slide-title cinzel-title text-center gold-glow">Análisis Final Comparativo</h2>
+                
+                <div class="table-container spacer-y">
+                    <table class="interactive-table table-final">
+                        <thead>
+                            <tr>
+                                <th class="final-header-red">🔴 Información sin transformación</th>
+                                <th class="final-header-green">🟢 Transformación genuina</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="final-cell-red"><i class="fa-solid fa-circle-xmark"></i> Judas Iscariote ✔</td>
+                                <td class="final-cell-green"><i class="fa-solid fa-circle-check"></i> Zaqueo ✔</td>
+                            </tr>
+                            <tr>
+                                <td class="final-cell-red"><i class="fa-solid fa-circle-xmark"></i> Fariseos ✔</td>
+                                <td class="final-cell-green"><i class="fa-solid fa-circle-check"></i> Pedro ✔</td>
+                            </tr>
+                            <tr>
+                                <td class="final-cell-red"><i class="fa-solid fa-circle-xmark"></i> Escribas ✔</td>
+                                <td class="final-cell-green"><i class="fa-solid fa-circle-check"></i> Pablo ✔</td>
+                            </tr>
+                            <tr>
+                                <td class="final-cell-red"><i class="fa-solid fa-circle-xmark"></i> Rey Saúl ✔</td>
+                                <td class="final-cell-green"><i class="fa-solid fa-circle-check"></i> Mujer Samaritana ✔</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center spacer-y">
+                    <h3 class="gold-glow playfair">¿De qué lado del camino te encuentras hoy?</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 29: REFLEXIÓN PERSONAL -->
+        <section class="slide" id="slide-29" data-hilo="fruto" data-tree="fruit-bg">
+            <div class="slide-content text-center">
+                <span class="category-tag gold-border">Introspección</span>
+                <h2 class="slide-title cinzel-title gold-glow">Reflexión Personal</h2>
+
+                <div class="reflection-main-card glass-panel max-w-700 margin-center spacer-y">
+                    <div class="bible-open-icon"><i class="fa-solid fa-book-bible"></i></div>
+                    <h3 class="reflection-prompt-title font-large text-gold">¿Qué verdades conozco hoy que todavía no han producido transformación en mi vida?</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 30: CONCLUSIÓN FINAL -->
+        <section class="slide" id="slide-30" data-hilo="all" data-tree="fruit-bg">
+            <div class="slide-content text-center">
+                <span class="category-tag gold-border">Conclusión</span>
+                <h2 class="slide-title cinzel-title gold-glow">El Camino Completado</h2>
+
+                <!-- FINAL REPEATED VERSE -->
+                <div class="verse-card-wrapper max-w-700 margin-center spacer-y">
+                    <div class="verse-card glass-panel gold-border">
+                        <p class="bible-verse font-large">
+                            <span class="verse-a">"Pero sed hacedores de la palabra, y no tan solamente oidores,</span>
+                            <span class="verse-b"> engañándoos a vosotros mismos."</span>
+                        </p>
+                        <span class="bible-ref gold-text">Santiago 1:22</span>
+                    </div>
+                </div>
+
+                <!-- FULL HILO VISUAL SHOWCASE -->
+                <div class="final-progression-box glass-panel max-w-600 margin-center spacer-y">
+                    <div class="progression-flex">
+                        <div class="progression-node red-glow">
+                            <span class="emoji">🧠</span>
+                            <span class="lbl">Información</span>
+                            <span class="detail-text">Mente</span>
+                        </div>
+                        <i class="fa-solid fa-circle-chevron-right prog-arr text-danger"></i>
+                        <div class="progression-node gold-glow">
+                            <span class="emoji">❤️</span>
+                            <span class="lbl">Transformación</span>
+                            <span class="detail-text">Corazón</span>
+                        </div>
+                        <i class="fa-solid fa-circle-chevron-right prog-arr text-success"></i>
+                        <div class="progression-node green-glow">
+                            <span class="emoji">🍇</span>
+                            <span class="lbl">Fruto</span>
+                            <span class="detail-text">Vida</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CLOSING PHRASES -->
+                <div class="conclusion-phrases max-w-800 margin-center spacer-y">
+                    <p class="closing-phrase-1 font-lead text-gold">"La información llena la mente; la transformación cambia la vida."</p>
+                    <p class="closing-phrase-2 font-large font-bold">La evidencia no es cuánto sabemos, sino cuánto hemos cambiado.</p>
+                </div>
+
+                <div class="reset-button-container spacer-y">
+                    <button class="reset-btn glass-btn" onclick="goToSlide(1)">
+                        <i class="fa-solid fa-rotate-left"></i> Reiniciar Estudio
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SIDEBAR / DRAWER CONTROLS FOR PRESENTER -->
+    <div class="presenter-drawer" id="presenter-drawer">
+        <button class="drawer-toggle-btn" id="drawer-toggle" title="Panel del Expositor">
+            <i class="fa-solid fa-sliders"></i>
+        </button>
+        <div class="drawer-content glass-panel">
+            <h3>Panel del Expositor</h3>
+            <p class="text-muted font-micro">Navegación rápida de diapositivas:</p>
+            <div class="slide-quick-list" id="slide-quick-list">
+                <!-- Javascript will populate this -->
+            </div>
+            <hr class="drawer-hr">
+            <div class="drawer-controls">
+                <button class="control-btn glass-btn-small" onclick="prevSlide()" title="Anterior"><i class="fa-solid fa-arrow-left"></i></button>
+                <button class="control-btn glass-btn-small" onclick="nextSlide()" title="Siguiente"><i class="fa-solid fa-arrow-right"></i></button>
+                <button class="control-btn glass-btn-small" onclick="toggleFullscreen()" title="Pantalla Completa"><i class="fa-solid fa-expand"></i></button>
+            </div>
+            <div class="shortcuts-guide font-micro text-muted text-center spacer-y">
+                <span>Atajos: Espacio/→ (Avance) | ← (Retroceso)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- GENERAL SLIDE NAVIGATION (FLOATING SIDE ARROWS) -->
+    <button class="nav-arrow prev-arrow" id="prev-arrow-btn" onclick="prevSlide()" aria-label="Slide anterior">
+        <i class="fa-solid fa-angle-left"></i>
+    </button>
+    <button class="nav-arrow next-arrow" id="next-arrow-btn" onclick="nextSlide()" aria-label="Slide siguiente">
+        <i class="fa-solid fa-angle-right"></i>
+    </button>
+
+    <script src="app.js"></script>
 </body>
 </html>
